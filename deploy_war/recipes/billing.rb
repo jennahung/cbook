@@ -15,7 +15,7 @@
 # limitations under the License.
 #
 
-include_recipe tomcat7
+include_recipe "tomcat7"
 
 execute "stop tomcat" do
   user "root"
