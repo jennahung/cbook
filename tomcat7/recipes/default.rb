@@ -19,16 +19,21 @@ include_recipe "java"
 node.set[:tomcat7][:webapp_dir] = "#{node[:tomcat7][:install_path]}/webapps"
 
 group node[:tomcat7][:group] do
-  gid 10
   action [:create]
 end
 
+directory '/home/tomcat' do
+  owner node[:tomcat7][:user]
+  group node[:tomcat7][:group]
+  mode '0755'
+  action :create
+end
 user node[:tomcat7][:user] do
-  comment "Tomcat Service User"
-  shell "/sbin/nologin"
-  uid 10
-  gid 10
-  action [:create]
+  group node[:tomcat7][:group]
+  system true
+  home '/home/tomcat'
+  shell '/bin/bash'
+  action :create
 end
 
 remote_file "/home/tomcat/tomcat7.tar.gz" do
@@ -45,7 +50,7 @@ end
 execute "Untar Apache Tomcat 7 binary file" do
   user "root"
   cwd "/home/tomcat"
-  command "tar zxvf tomcat7.tar.gz -C #{node[:tomcat7][:install_path]} "
+  command "tar zxvf tomcat7.tar.gz -C --strip-components=1 --strip-components=1"
   action :run
   not_if "test -d #{node[:tomcat7][:install_path]}/conf"
 end
@@ -66,5 +71,4 @@ template "/etc/init.d/tomcat" do
   owner "root"
   mode "0755"
 end
-
 
