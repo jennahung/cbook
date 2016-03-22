@@ -19,15 +19,15 @@ include_recipe "java"
 node.set[:tomcat7][:webapp_dir] = "#{node[:tomcat7][:install_path]}/webapps"
 
 group node[:tomcat7][:group] do
-  gid 91
+  gid 10
   action [:create]
 end
 
 user node[:tomcat7][:user] do
   comment "Tomcat Service User"
   shell "/sbin/nologin"
-  uid 91
-  gid 91
+  uid 10
+  gid 10
   action [:create]
 end
 
