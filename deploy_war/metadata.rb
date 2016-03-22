@@ -1,4 +1,4 @@
-name             'tomcat7'
+name             'deploy_war'
 license          'All rights reserved'
 description      'Deploy war to tomcat7'
 long_description IO.read(File.join(File.dirname(__FILE__), 'README.md'))
