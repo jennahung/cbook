@@ -1,9 +1,7 @@
 #!/bin/bash
 
-path_to_cbooks=chef
-
 #sudo yum -y upgrade 
-sudo yum install vim git wget
+sudo yum install -y vim git wget
 
 redhat_v=$(cat /etc/redhat-release | grep -o 'release [^ ]' | sed 's/release //')
 
@@ -23,6 +21,8 @@ if [ $? != 0 ]; then
    fi
 fi 
 
+rm -rf chefdk*.rpm
+
 chef-solo -v > /dev/null 2>&1
 
 if [ $? = 0 ]; then
@@ -34,8 +34,5 @@ fi
 
 host=`hostname`
 
-echo "
-   file_cache_path '/tmp'
-   cookbook_path '$PWD/cookbooks'
-   json_attribs 'nodes/${host}.json'
-" > solo.rb
+rm -rf chef-repo
+git clone https://github.com/jennahung/cbook.git chef-repo
