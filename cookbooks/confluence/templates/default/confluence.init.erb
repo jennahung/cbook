@@ -1,0 +1,54 @@
+# Source function library.
+. /etc/rc.d/init.d/functions
+
+# Define some variables
+APP=confluence
+USER=<%= node['confluence']['user'] %>
+BASE=<%= node['confluence']['install_path'] %>
+
+start() {
+  echo "Starting $APP"
+  su -l $USER -c $BASE/bin/start-confluence.sh
+  return $?
+}
+
+stop() {
+  echo "Stopping $APP"
+  su -l $USER -c $BASE/bin/stop-confluence.sh
+  return $?
+}
+
+case "$1" in
+  # Start command
+    start)
+    start
+    RETVAL=$?
+    ;;
+  # Stop command
+    stop)
+    stop
+    RETVAL=$?
+    ;;
+  # Restart command
+    restart)
+    stop
+    start
+    RETVAL=$?
+    ;;
+  # Status command
+    status)
+    <% case node['platform_family'] -%>
+    <% when 'rhel' -%>
+    status -p $BASE/work/catalina.pid $APP
+    <% else -%>
+    status_of_proc -p $BASE/work/catalina.pid $JAVA_HOME/bin/java $APP
+    <% end -%>
+    RETVAL=$?
+    ;;
+  *)
+    echo "Usage: $APP {start|restart|stop|status}"
+    RETVAL=2
+    ;;
+esac
+
+exit $RETVAL

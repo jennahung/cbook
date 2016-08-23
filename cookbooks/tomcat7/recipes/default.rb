@@ -1,0 +1,74 @@
+#
+# Cookbook Name:: tomcat_latest
+# Recipe:: default
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+include_recipe "java"
+
+node.set[:tomcat7][:webapp_dir] = "#{node[:tomcat7][:install_path]}/webapps"
+
+group node[:tomcat7][:group] do
+  action [:create]
+end
+
+directory '/home/tomcat' do
+  owner node[:tomcat7][:user]
+  group node[:tomcat7][:group]
+  mode '0755'
+  action :create
+end
+user node[:tomcat7][:user] do
+  group node[:tomcat7][:group]
+  system true
+  home '/home/tomcat'
+  shell '/bin/bash'
+  action :create
+end
+
+remote_file "/home/tomcat/tomcat7.tar.gz" do
+  source "#{node[:tomcat7][:url]}/v#{node[:tomcat7][:version]}/bin/apache-tomcat-#{node[:tomcat7][:version]}.tar.gz"
+  action :create_if_missing
+end
+
+directory "#{node[:tomcat7][:install_path]}" do
+  owner node[:tomcat7][:user]
+  group node[:tomcat7][:group]
+  recursive true
+end
+
+execute "Untar Apache Tomcat 7 binary file" do
+  user "root"
+  cwd "/home/tomcat"
+  command "tar zxvf tomcat7.tar.gz -C --strip-components=1 --strip-components=1"
+  action :run
+  not_if "test -d #{node[:tomcat7][:install_path]}/conf"
+end
+
+template "#{node[:tomcat7][:install_path]}/conf/server.xml" do
+  source "server7.xml.erb"
+  owner "root"
+  mode "0644"
+  not_if "test -f #{node[:tomcat7][:install_path]}/conf/server.xml"
+end
+
+bash "tomcat perms" do
+  code "chown -R #{node[:tomcat7][:user]}.#{node[:tomcat7][:group]} #{node[:tomcat7][:install_path]}"
+end
+
+template "/etc/init.d/tomcat" do
+  source "tomcat7.erb"
+  owner "root"
+  mode "0755"
+end
+

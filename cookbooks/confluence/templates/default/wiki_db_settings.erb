@@ -1,0 +1,40 @@
+###
+### General config
+##
+
+[mysqld]
+datadir = /var/lib/mysql
+socket = /var/lib/mysql/mysql.sock
+user = mysql
+character-set-server = utf8
+collation-server = utf8_bin
+lower-case-table-names = 1
+max-allowed-packet = 512M
+
+
+###
+### InnoDB configuration
+##
+#d
+
+default-storage-engine = innodb
+innodb-buffer-pool-size = 256M
+innodb-data-file-path = ibdata1:100M:autoextend
+innodb-autoextend-increment = 10M
+innodb-log-buffer-size = 4M
+innodb-log-file-size = 512M
+
+###
+### ctl
+##
+
+[mysqld_safe]
+log-error=/var/log/wiki/mysqld.log
+
+###
+### mysqldump
+##
+[mysqldump]
+quick
+max-allowed-packet = 32M
+
