@@ -18,13 +18,16 @@ execute "Install Java" do
   not_if { ::File.directory?("#{node['confluence']['java']['install_home']}/#{node['confluence']['java']['jdk']}") }
 end
 
+
 execute "Install DB" do
   cwd "/tmp"
   command <<-COMMAND
     rm -rf mysql*.rpm
-    wget http://repo.mysql.com/mysql-community-release-el7-5.noarch.rpm
-    sudo rpm -ivh mysql-community-release-el7-5.noarch.rpm 2> /dev/null
-    sudo yum install -y mysql-community-server
+    wget http://dev.mysql.com/get/mysql57-community-release-el6-7.noarch.rpm
+    sudo rpm -e mysql-community-release
+    sudo rpm -ivh mysql57-community-release-el6-7.noarch.rpm
+    sudo yum install mysql-community-server
+    rm -rf mysql*.rpm
   COMMAND
   not_if { ::File.directory?("/var/lib/mysql") }
 end
@@ -59,7 +62,7 @@ execute "Extracting Confluence #{node['confluence']['version']}" do
     rm -rf *.gz
     wget #{node['confluence']['url']}
     tar -zxf atlassian-confluence-#{node['confluence']['version']}.tar.gz
-    mv atlassian-confluence-#{node['confluence']['version']} #{node['confluence']['install_path']}
+    mv atlassian-confluence-#{node['confluence']['version']}/* #{node['confluence']['install_path']}
     chown -R #{node['confluence']['user']} #{node['confluence']['install_path']}
   COMMAND
   not_if { ::File.directory?("#{node['confluence']['install_path']}/conf") }

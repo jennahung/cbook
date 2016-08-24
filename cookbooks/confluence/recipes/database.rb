@@ -5,9 +5,7 @@
 # Copyright (c) 2016 The Authors, All Rights Reserved.
 
 
-mysql_client 'default' do
-  action :create
-end
+wget http://dev.mysql.com/get/mysql57-community-release-el6-7.noarch.rpm
 
 mysql_service 'default' do
   initial_root_password node['confluence']['database']['root_password']
