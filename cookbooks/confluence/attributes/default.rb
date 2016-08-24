@@ -14,14 +14,14 @@ default['confluence']['checksum'] =
 
 default['confluence']['database']['host']     = 'localhost'
 default['confluence']['database']['name']     = 'iad_wiki'
-default['confluence']['database']['password'] = 'wiki_db!'
+default['confluence']['database']['password'] = 'Wiki0816_db!'
 default['confluence']['database']['port']     = 3306
 default['confluence']['database']['type']     = 'mysql'
 default['confluence']['database']['user']     = 'wiki_db'
-default['confluence']['database']['root_password'] = 'root!'
+default['confluence']['database']['root_password'] = 'rootT!0816'
 
 default['confluence']['jvm']['minimum_memory']  = '1024m'
-default['confluence']['jvm']['maximum_memory']  = '4096mm'
+default['confluence']['jvm']['maximum_memory']  = '4096m'
 default['confluence']['jvm']['maximum_permsize'] = '512m'
 
 default['confluence']['tomcat']['shutdown_port']= '9005'

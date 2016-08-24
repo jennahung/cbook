@@ -21,6 +21,8 @@
 #end
 
 # configuration
+
+
 template "#{node['confluence']['install_path']}/confluence/WEB-INF/classes/confluence-init.properties" do
   source 'confluence-init.properties.erb'
   owner node['confluence']['user']
@@ -47,6 +49,12 @@ template '/etc/init.d/confluence' do
 end
 
 # service
+
+service 'mysqld' do
+  supports :status => true
+  action :start
+end
+
 service 'confluence' do
   supports :status => true
   action :start

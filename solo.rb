@@ -1,4 +1,4 @@
 
-   file_cache_path '/tmp'
-   cookbook_path '/home/centos/chef-repo/cookbooks'
+file_cache_path '/tmp/chef'
+cookbook_path '/home/centos/chef-repo/cookbooks'
 
