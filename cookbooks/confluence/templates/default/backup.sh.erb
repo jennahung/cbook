@@ -1,0 +1,8 @@
+#/bin/bash
+
+cd <%= node['confluence']['backup_path'] %> 
+DATE=`date '+%y%m%d'`
+sudo su <%= node['confluence']['database']['user'] %>
+mysqldump -h <%= node['confluence']['database']['host'] %> -u <%= node['confluence']['database']['user'] %> -p<%= node['confluence']['database']['password'] %> > confluence-$DATE.sql 
+
+find <%= node['confluence']['backup_path'] %> -type f -mtime +77777775 -exec rm {} \;

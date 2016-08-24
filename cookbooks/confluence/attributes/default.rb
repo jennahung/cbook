@@ -1,8 +1,10 @@
 
+
 default['confluence']['java']['java_home']  = '/usr/java/8.101'
 
 default['confluence']['home_path']      = '/cd/wiki/wiki-data'
 default['confluence']['install_path']   = '/cd/wiki/wiki-5103'
+default['confluence']['backup_path']      = '/cd/wiki/wiki-backup'
 default['confluence']['user']           = 'atlassian'
 default['confluence']['version']        = '5.10.3'
 default['confluence']['url_base']       = 'http://www.atlassian.com/software/confluence/downloads/binary/atlassian-confluence'

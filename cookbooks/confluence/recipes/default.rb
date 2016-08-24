@@ -21,12 +21,26 @@
 #end
 
 # configuration
-
-
 template "#{node['confluence']['install_path']}/confluence/WEB-INF/classes/confluence-init.properties" do
   source 'confluence-init.properties.erb'
   owner node['confluence']['user']
   mode '0644'
+end
+
+# backup
+template "#{node['confluence']['backup_path']}/backup.sh" do
+  source 'backup.sh.erb'
+  owner node['confluence']['user']
+  mode '0755'
+end
+
+cron 'backup.sh' do
+  minute '0'
+  hour '3'
+  weekday '1,4'
+  command "#{node['confluence']['backup_path']}/backup.sh"
+  user "#{node['confluence']['user']}"
+  only_if {File.exists?("#{node['confluence']['backup_path']}/backup.sh")}
 end
 
 # tomcat
@@ -49,7 +63,6 @@ template '/etc/init.d/confluence' do
 end
 
 # service
-
 service 'mysqld' do
   supports :status => true
   action :start

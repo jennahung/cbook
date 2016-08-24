@@ -48,6 +48,14 @@ directory "#{node['confluence']['home_path']}" do
   recursive true
 end
 
+directory "#{node['confluence']['backup_path']}" do
+  owner node['confluence']['user']
+  group node['confluence']['user']
+  mode 00755
+  action :create
+  recursive true
+end
+
 directory "#{node['confluence']['install_path']}" do
   owner node['confluence']['user']
   group node['confluence']['user']
@@ -63,7 +71,7 @@ execute "Extracting Confluence #{node['confluence']['version']}" do
     wget #{node['confluence']['url']}
     tar -zxf atlassian-confluence-#{node['confluence']['version']}.tar.gz
     mv atlassian-confluence-#{node['confluence']['version']}/* #{node['confluence']['install_path']}
-    chown -R #{node['confluence']['user']} #{node['confluence']['install_path']}
+    chown -R #{node['confluence']['user']}.#{node['confluence']['user']} #{node['confluence']['install_path']}
   COMMAND
   not_if { ::File.directory?("#{node['confluence']['install_path']}/conf") }
 end
